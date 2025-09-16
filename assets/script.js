@@ -2,6 +2,7 @@
 (function () {
   const root = document.documentElement;
   const toggle = document.getElementById('theme-toggle');
+  const toggleMobile = document.getElementById('theme-toggle-mobile');
   const saved = localStorage.getItem('theme');
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   function setTheme(theme) {
@@ -9,18 +10,20 @@
     localStorage.setItem('theme', theme);
     const icon = toggle && toggle.querySelector('.icon');
     if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    const iconM = toggleMobile && toggleMobile.querySelector('.icon');
+    if (iconM) iconM.textContent = theme === 'dark' ? '☀️' : '🌙';
   }
   if (saved) {
     setTheme(saved);
   } else if (prefersDark) {
     setTheme('dark');
   }
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      const next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
-      setTheme(next);
-    });
+  function onClick() {
+    const next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+    setTheme(next);
   }
+  if (toggle) toggle.addEventListener('click', onClick);
+  if (toggleMobile) toggleMobile.addEventListener('click', onClick);
 })();
 
 // Contact form -> email via mailto
@@ -87,6 +90,40 @@
   document.querySelectorAll('.reveal').forEach((el, idx) => {
     el.style.transitionDelay = `${Math.min(idx * 60, 300)}ms`;
     observer.observe(el);
+  });
+})();
+
+// Mobile hamburger menu
+(function () {
+  const burger = document.getElementById('hamburger');
+  const menu = document.getElementById('mobile-menu');
+  if (!burger || !menu) return;
+
+  function setOpen(open) {
+    burger.setAttribute('aria-expanded', String(open));
+    if (open) {
+      menu.classList.add('open');
+      menu.removeAttribute('hidden');
+      document.body.style.overflow = 'hidden';
+    } else {
+      menu.classList.remove('open');
+      menu.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+    }
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = burger.getAttribute('aria-expanded') === 'true';
+    setOpen(!isOpen);
+  });
+
+  menu.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target && target.closest('a')) setOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) setOpen(false);
   });
 })();
 

@@ -59,7 +59,7 @@
       message || '(none)'
     ].filter(Boolean);
     const body = encodeURIComponent(bodyLines.join('\n'));
-    const mailto = `mailto:hello@sewsmartcreations.com?subject=${subject}&body=${body}`;
+    const mailto = `mailto:sewsmartcreationsschool@gmail.com?subject=${subject}&body=${body}`;
 
     // Try to open mail client
     window.location.href = mailto;

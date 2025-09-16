@@ -68,4 +68,26 @@
   });
 })();
 
+// Scroll reveal: observe .reveal elements
+(function () {
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in-view'));
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    }
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach((el, idx) => {
+    el.style.transitionDelay = `${Math.min(idx * 60, 300)}ms`;
+    observer.observe(el);
+  });
+})();
+
 

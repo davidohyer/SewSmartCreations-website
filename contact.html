@@ -55,7 +55,11 @@
         <div class="container contact-grid">
           <div class="contact-card reveal">
             <h2>Book Your Class</h2>
-            <form id="contact-form">
+            <form id="contact-form" action="https://formsubmit.co/sewsmartcreationsschool@gmail.com" method="POST" data-backend="formsubmit">
+              <input type="hidden" name="_subject" value="Class booking inquiry — Sew Smart Creations">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_next" value="thank-you.html">
               <div class="form-row">
                 <label for="name">Name</label>
                 <input id="name" name="name" type="text" required>

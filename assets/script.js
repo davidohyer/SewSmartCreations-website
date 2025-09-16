@@ -30,6 +30,9 @@
 (function () {
   const form = document.getElementById('contact-form');
   if (!form) return;
+  // If using FormSubmit backend, let the browser submit normally
+  if (form.getAttribute('data-backend') === 'formsubmit') return;
+  // Otherwise fallback to mailto (kept for completeness if backend removed)
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(form);
@@ -40,16 +43,10 @@
     const pkg = (data.get('package') || '').toString();
     const date = (data.get('date') || '').toString();
     const message = (data.get('message') || '').toString().trim();
-
-    if (!name || !email) {
-      alert('Please provide your name and email.');
-      return;
-    }
-
-    const subject = encodeURIComponent(`Class booking inquiry — ${name}`);
+    const subject = encodeURIComponent(`Class booking inquiry — ${name || 'New Inquiry'}`);
     const bodyLines = [
-      `Name: ${name}`,
-      `Email: ${email}`,
+      name ? `Name: ${name}` : '',
+      email ? `Email: ${email}` : '',
       phone ? `Phone: ${phone}` : '',
       ages ? `Students' Ages: ${ages}` : '',
       `Package Interest: ${pkg}`,
@@ -60,14 +57,8 @@
     ].filter(Boolean);
     const body = encodeURIComponent(bodyLines.join('\n'));
     const mailto = `mailto:sewsmartcreationsschool@gmail.com?subject=${subject}&body=${body}`;
-
-    // Try to open mail client
     window.location.href = mailto;
-
-    // As fallback, also open in a new tab (some browsers block direct navigation)
-    setTimeout(() => {
-      window.open(mailto, '_blank');
-    }, 300);
+    setTimeout(() => { window.open(mailto, '_blank'); }, 300);
   });
 })();
 
